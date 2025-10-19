@@ -22,7 +22,8 @@ class NetworkManager:
             conn, addr = self.sock.accept()
             self.peers[addr] = Peer(conn, addr, self.credentials_manager.get_signing_key())
 
-    def connect_to_peer(self, peer_ip, peer_port):
+    def connect_to_peer(self, addr):
+        peer_ip, peer_port = addr
         if (peer_ip, peer_port) in self.peers:
             return
         try:
@@ -34,5 +35,4 @@ class NetworkManager:
         except Exception as e:
             print(e)
 
-    
-
+    def connect_to_discovered_peer(self, verify_key, addr):pass

@@ -18,3 +18,8 @@ class UserManager:
 
     def get_user(self, verify_key):
         return self.contacts.get(verify_key)
+
+    def update_user_addr(self, verify_key, new_addr):
+        user = self.contacts.get(verify_key)
+        user.addr = new_addr
+        self.contacts[verify_key] = user
