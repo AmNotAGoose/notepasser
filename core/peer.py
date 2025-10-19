@@ -1,5 +1,6 @@
 import json
 import threading
+import time
 from json import JSONDecodeError
 
 import nacl.utils
@@ -7,18 +8,18 @@ from nacl.exceptions import BadSignatureError
 from nacl.public import PrivateKey, Box, PublicKey
 from nacl.signing import SigningKey, VerifyKey
 
-from core.network_manager import running
+from core.globals import running
 
 
 class Peer:
-    def __init__(self, conn, addr, my_sign, my_verify):
+    def __init__(self, conn, addr, my_sign: SigningKey):
         self.conn = conn
         self.addr = addr
 
         self.peer_information = None
 
         self.my_sign = my_sign
-        self.my_verify = my_verify
+        self.my_verify = my_sign.verify_key
         self.my_sk = PrivateKey.generate()
         self.my_pk = self.my_sk.public_key
         self.my_box = None
@@ -56,3 +57,27 @@ class Peer:
                 print("you have opps")
             except (JSONDecodeError, KeyError):
                 print("packet broken")
+
+        if self.my_box:
+            threading.Thread(target=self.listen_for_messages, daemon=True).start()
+
+    def listen_for_messages(self):
+        while running:
+            if not self.my_box:
+                time.sleep(0.01)
+                continue
+            try:
+                encrypted = self.conn.recv(4096)
+                if not encrypted:
+                    print(f"{self.addr} disconnected")
+                    break
+                message = self.my_box.decrypt(encrypted).decode()
+                print(f"[{self.addr}] {message}")
+            except Exception as e:
+                print(e)
+
+    def send_message(self, message):
+        if not self.my_box:
+            print("handshake not complete")
+            return
+        self.conn.sendall(self.my_box.encrypt(message.encode()))

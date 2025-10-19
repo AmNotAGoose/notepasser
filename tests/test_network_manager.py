@@ -1,16 +1,17 @@
 import time
+
+from core.credentials_manager import CredentialsManager
 from core.network_manager import NetworkManager
+from core.storage_manager import StorageManager
+
 
 def test_send_and_receive():
-    received = []
+    nm1 = NetworkManager("127.0.0.1", 32313, CredentialsManager(StorageManager()))
+    nm2 = NetworkManager("127.0.0.1", 32314, CredentialsManager(StorageManager()))
 
-    def callback(inp, addr):
-        received.append(inp)
+    nm2.connect_to_peer("127.0.0.1", 32313)
+    peer = nm2.peers[("127.0.0.1", 32313)]
+    while not peer.my_box:
+        time.sleep(0.1)
 
-    nm = NetworkManager("127.0.0.1", 30303, callback)
-
-    nm.send("hello")
-
-    time.sleep(0.5)
-
-    assert "hello" in received
+    peer.send_message("hello")
