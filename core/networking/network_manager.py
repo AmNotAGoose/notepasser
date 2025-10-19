@@ -8,13 +8,11 @@ from core.networking.peer import Peer
 
 class NetworkManager:
     def __init__(self, my_ip, my_port, credentials_manager: CredentialsManager):
-        self.MY_IP = my_ip
-        self.MY_PORT = my_port
         self.credentials_manager = credentials_manager
         self.peers = {}
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind((self.MY_IP, self.MY_PORT))
+        self.sock.bind((my_ip, my_port))
         self.sock.listen(5)
 
         threading.Thread(target=self.listen_for_peers, daemon=True).start()
@@ -27,7 +25,6 @@ class NetworkManager:
     def connect_to_peer(self, peer_ip, peer_port):
         if (peer_ip, peer_port) in self.peers:
             return
-
         try:
             conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn.connect((peer_ip, peer_port))
@@ -36,3 +33,6 @@ class NetworkManager:
             print("connected")
         except Exception as e:
             print(e)
+
+    
+

@@ -1,5 +1,5 @@
 from core.storage.storage_manager import StorageManager
-from core.models.user_model import UserModelV1
+from core.models.user_model import UserModel
 
 
 class UserManager:
@@ -14,7 +14,7 @@ class UserManager:
         self.contacts = {}
         file_content = self.storage_manager.read_file('contacts')
         for contact in file_content:
-            self.contacts[contact.public_key] = UserModelV1.serialize(contact)
+            self.contacts[contact.verify_key] = UserModel.serialize(contact)
 
-    def get_user(self, public_key):
-        return self.contacts.get(public_key)
+    def get_user(self, verify_key):
+        return self.contacts.get(verify_key)

@@ -1,4 +1,5 @@
 import json
+import queue
 import threading
 import time
 from json import JSONDecodeError
@@ -22,6 +23,7 @@ class Peer:
         self.my_sk = PrivateKey.generate()
         self.my_pk = self.my_sk.public_key
         self.my_box = None
+        self.message_queue = queue.Queue()
 
         payload = {
             "encryption_key": bytes(self.my_pk).hex(),
@@ -71,6 +73,7 @@ class Peer:
                     print(f"{self.addr} disconnected")
                     break
                 message = self.my_box.decrypt(encrypted).decode()
+                self.message_queue.put([self.addr, message])
                 print(f"[{self.addr}] {message}")
             except Exception as e:
                 print(e)
@@ -80,3 +83,4 @@ class Peer:
             print("handshake not complete")
             return
         self.conn.sendall(self.my_box.encrypt(message.encode()))
+        self.message_queue.put([self.addr, message])

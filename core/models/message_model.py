@@ -1,4 +1,4 @@
 class MessageModel:
-    def __init__(self, user_id,  message):
-        self.user_id = user_id
+    def __init__(self, user_verify_key,  message):
+        self.user_verify_key = user_verify_key
         self.message = message
