@@ -1,8 +1,8 @@
 import time
 
-from core.credentials_manager import CredentialsManager
-from core.network_manager import NetworkManager
-from core.storage_manager import StorageManager
+from core.storage.credentials_manager import CredentialsManager
+from core.networking.network_manager import NetworkManager
+from core.storage.storage_manager import StorageManager
 
 
 def test_send_and_receive():

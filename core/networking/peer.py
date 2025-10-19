@@ -3,7 +3,6 @@ import threading
 import time
 from json import JSONDecodeError
 
-import nacl.utils
 from nacl.exceptions import BadSignatureError
 from nacl.public import PrivateKey, Box, PublicKey
 from nacl.signing import SigningKey, VerifyKey

@@ -1,6 +1,6 @@
 from nacl.signing import SigningKey
 
-from core.storage_manager import StorageManager
+from core.storage.storage_manager import StorageManager
 
 
 class CredentialsManager:

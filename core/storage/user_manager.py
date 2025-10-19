@@ -1,5 +1,5 @@
-from core.storage_manager import StorageManager
-from core.user_model import UserModelV1
+from core.storage.storage_manager import StorageManager
+from core.models.user_model import UserModelV1
 
 
 class UserManager:

@@ -1,13 +1,9 @@
-import json
 import socket
 import threading
-import time
 
-from core.credentials_manager import CredentialsManager
+from core.storage.credentials_manager import CredentialsManager
 from core.globals import running
-from core.peer import Peer
-from core.storage_manager import StorageManager
-from core.user_manager import UserManager
+from core.networking.peer import Peer
 
 
 class NetworkManager:
