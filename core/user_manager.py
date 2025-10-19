@@ -18,6 +18,3 @@ class UserManager:
 
     def get_user(self, public_key):
         return self.contacts.get(public_key)
-
-
-UserManager(StorageManager())

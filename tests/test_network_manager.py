@@ -9,7 +9,7 @@ def test_send_and_receive():
 
     nm = NetworkManager("127.0.0.1", 30303, callback)
 
-    nm.send_packet("hello", "127.0.0.1", 30303)
+    nm.send("hello")
 
     time.sleep(0.5)
 

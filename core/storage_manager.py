@@ -8,7 +8,8 @@ class StorageManager:
         self.storage_path.mkdir(parents=True, exist_ok=True)
 
         self.files = {
-            "contacts": self.storage_path / "contacts.json"
+            "contacts": self.storage_path / "contacts.json",
+            "credentials": self.storage_path / "credentials.json"
         }
 
         for file_path in self.files.keys():
