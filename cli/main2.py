@@ -8,7 +8,7 @@ from core.storage.storage_manager import StorageManager
 from core.storage.user_manager import UserManager
 
 # storage
-storage_manager = StorageManager()
+storage_manager = StorageManager(".fakenotepasser")
 user_manager = UserManager(storage_manager)
 credentials_manager = CredentialsManager(storage_manager)
 

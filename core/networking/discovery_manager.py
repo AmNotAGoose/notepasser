@@ -7,14 +7,15 @@ from core.storage.credentials_manager import CredentialsManager
 
 
 class DiscoveryManager:
-    def __init__(self, ip, port, verify_key, user_manager, max_broadcast_number):
+    def __init__(self, ip, discovery_port, verify_key, user_manager, max_broadcast_number):
         self.ip = ip
-        self.port = port
+        self.port = discovery_port
         self.verify_key = bytes(verify_key).hex()
         self.user_manager = user_manager
         self.max_broadcast_number = max_broadcast_number
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind(("0.0.0.0", self.port))
 
     def start_broadcast(self):

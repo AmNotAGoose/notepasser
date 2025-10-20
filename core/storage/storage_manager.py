@@ -3,8 +3,8 @@ from pathlib import Path
 
 
 class StorageManager:
-    def __init__(self):
-        self.storage_path = Path.home() / ".notepasser"
+    def __init__(self, storage_directory=".notepasser"):
+        self.storage_path = Path.home() / storage_directory
         self.storage_path.mkdir(parents=True, exist_ok=True)
 
         self.files = {
