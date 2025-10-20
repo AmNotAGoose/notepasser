@@ -3,6 +3,7 @@ import queue
 import threading
 import time
 from json import JSONDecodeError
+from socket import socket
 
 from nacl.exceptions import BadSignatureError
 from nacl.public import PrivateKey, Box, PublicKey
@@ -58,6 +59,8 @@ class Peer:
                 print("you have opps")
             except (JSONDecodeError, KeyError):
                 print("packet broken")
+            except socket.timeout:
+                print("no longer on this network / unreachable")
 
         if self.my_box:
             threading.Thread(target=self.listen_for_messages, daemon=True).start()

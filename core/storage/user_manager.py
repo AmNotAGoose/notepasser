@@ -5,7 +5,9 @@ from core.models.user_model import UserModel
 class UserManager:
     def __init__(self, storage_manager: StorageManager):
         self.storage_manager = storage_manager
-        self.contacts = None
+        self.contacts = {}
+
+        self.discovered = [] # updated by discovery manager
 
         self.reload_contacts()
 
@@ -19,7 +21,13 @@ class UserManager:
     def get_user(self, verify_key):
         return self.contacts.get(verify_key)
 
-    def update_user_addr(self, verify_key, new_addr):
+    def ensure_user_exists(self, verify_key, addr):
+        if verify_key in self.contacts.keys(): return
+        self.contacts[verify_key] = UserModel(None, None, verify_key, addr)
+
+    def on_user_discovered(self, verify_key, new_addr):
+        self.ensure_user_exists(verify_key, new_addr)
         user = self.contacts.get(verify_key)
         user.addr = new_addr
         self.contacts[verify_key] = user
+        self.discovered.append(verify_key)

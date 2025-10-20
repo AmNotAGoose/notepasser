@@ -7,12 +7,12 @@ from core.networking.peer import Peer
 
 
 class NetworkManager:
-    def __init__(self, my_ip, my_port, credentials_manager: CredentialsManager):
+    def __init__(self, ip, port, credentials_manager: CredentialsManager):
         self.credentials_manager = credentials_manager
         self.peers = {}
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind((my_ip, my_port))
+        self.sock.bind((ip, port))
         self.sock.listen(5)
 
         threading.Thread(target=self.listen_for_peers, daemon=True).start()
