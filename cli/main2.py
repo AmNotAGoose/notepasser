@@ -13,12 +13,17 @@ user_manager = UserManager(storage_manager)
 credentials_manager = CredentialsManager(storage_manager)
 
 # network
-ip = socket.gethostbyname(socket.gethostname())
 discovery_port = 33311
-port = 0
+ip = socket.gethostbyname(socket.gethostname())
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((ip, 0))
+port = sock.getsockname()[1]
+sock.close()
+
+print("port ", port)
 
 network_manager = NetworkManager(ip, port, credentials_manager, user_manager)
-discovery_manager = DiscoveryManager(ip, discovery_port, credentials_manager.get_signing_key().verify_key, user_manager, 3)
+discovery_manager = DiscoveryManager(ip, port, discovery_port, credentials_manager.get_signing_key().verify_key, user_manager, 3)
 
 # start
 discovery_manager.start_listening()
