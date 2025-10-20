@@ -30,4 +30,5 @@ class UserManager:
         user = self.contacts.get(verify_key)
         user.addr = new_addr
         self.contacts[verify_key] = user
-        self.discovered.append(verify_key)
+        if not verify_key in self.discovered:
+            self.discovered.append(verify_key)

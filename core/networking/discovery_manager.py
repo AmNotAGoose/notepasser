@@ -19,6 +19,9 @@ class DiscoveryManager:
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind(("0.0.0.0", self.discovery_port))
 
+        self.replied_to = set()
+        self.reply_timeout = 3
+
     def get_broadcast_string(self):
         return f"NOTEPASSER|{VERSION}|{self.verify_key}|{self.ip}|{self.port}"
 
@@ -54,7 +57,7 @@ class DiscoveryManager:
                          continue
                      print("discovered user " + peer_verify_key + " with address " + str(peer_addr))
                      self.user_manager.on_user_discovered(peer_verify_key, peer_addr)
-                     self.respond_to_discovery_request(peer_addr)
+                     self.respond_to_discovery_request(peer_verify_key)
                  except socket.timeout:
                      continue
                  except ConnectionResetError:
@@ -63,6 +66,18 @@ class DiscoveryManager:
 
         threading.Thread(target=listen, daemon=True).start()
 
-    def respond_to_discovery_request(self, peer_addr):
-        print("sending targeted discovery packet to " + str(peer_addr))
-        self.sock.sendto(self.get_broadcast_string().encode("utf-8"), peer_addr) # this should really have some kind of limiter
+    def respond_to_discovery_request(self, peer_verify_key):
+        if peer_verify_key in self.replied_to: return
+        print("sending discovery packet")
+        self.sock.sendto(self.get_broadcast_string().encode("utf-8"), ("255.255.255.255", self.discovery_port)) # this should really have some kind of limiter
+        self.replied_to.add(peer_verify_key)
+        self.remove_from_replied_to_after_delay(peer_verify_key)
+
+    def remove_from_replied_to_after_delay(self, peer_verify_key):
+        def remove():
+            nonlocal peer_verify_key
+            time.sleep(self.reply_timeout)
+            if not peer_verify_key in self.replied_to: return
+            self.replied_to.remove(peer_verify_key)
+
+        threading.Thread(target=remove, daemon=True).start()

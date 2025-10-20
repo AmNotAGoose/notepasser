@@ -36,4 +36,11 @@ while True:
         case "connect":
             print("which index to connect to: " + str(user_manager.discovered))
             idx = input()
-            network_manager.connect_to_peer(user_manager.discovered[int(idx)])
+
+            peer = network_manager.connect_to_peer(user_manager.discovered[int(idx)])
+            print("MESSAGING SESSION STARTED. type |exit| to exit")
+            while True:
+                message = input()
+                if message == "|exit|":
+                    break
+                peer.send_message(message)

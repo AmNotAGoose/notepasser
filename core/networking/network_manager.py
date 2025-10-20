@@ -22,20 +22,20 @@ class NetworkManager:
     def listen_for_peers(self):
         while running:
             conn, addr = self.sock.accept()
+            print("accepted peer " + str(addr))
             self.peers[addr] = Peer(conn, addr, self.credentials_manager.get_signing_key())
 
     def connect_to_peer(self, verify_key):
         user = self.user_manager.get_user(verify_key)
         peer_ip, peer_port = user.addr
-        if (peer_ip, peer_port) in self.peers:
-            return
+        if (peer_ip, peer_port) in self.peers: return
+        print("trying to connect to " + str(user.addr))
         try:
             conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn.connect((peer_ip, peer_port))
 
-            self.peers[(peer_ip, peer_port)] = Peer(conn, (peer_ip, peer_port), self.credentials_manager.get_signing_key())
-            print("connected")
+            self.peers[verify_key] = Peer(conn, (peer_ip, peer_port), self.credentials_manager.get_signing_key())
+            print("connected to " + str((peer_ip, peer_port)))
+            return self.peers[verify_key]
         except Exception as e:
             print(e)
-
-    def connect_to_discovered_peer(self, verify_key, addr):pass
