@@ -19,9 +19,10 @@ class UserManager:
             self.contacts[contact.verify_key] = UserModel.serialize(contact)
 
     def get_user(self, verify_key):
+        self.ensure_user_exists(verify_key)
         return self.contacts.get(verify_key)
 
-    def ensure_user_exists(self, verify_key, addr):
+    def ensure_user_exists(self, verify_key, addr=None):
         if verify_key in self.contacts.keys(): return
         self.contacts[verify_key] = UserModel(None, None, verify_key, addr)
 

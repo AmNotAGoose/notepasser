@@ -4,6 +4,7 @@ import time
 
 from core.globals import VERSION
 from core.storage.credentials_manager import CredentialsManager
+from core.debug.debugging import log
 
 
 class DiscoveryManager:
@@ -27,11 +28,11 @@ class DiscoveryManager:
 
     def start_broadcast(self):
         def broadcast():
-            print("discovery broadcast started")
+            log("discovery broadcast started")
             self.user_manager.discovered = []
             for i in range(0, self.max_broadcast_number):
                 message = self.get_broadcast_string()
-                print("sending discovery packet " + message)
+                log("sending discovery packet " + message)
                 self.sock.sendto(message.encode("utf-8"), ("255.255.255.255", self.discovery_port))
                 time.sleep(1.5)
 
@@ -39,36 +40,36 @@ class DiscoveryManager:
 
     def start_listening(self):
         def listen():
-             print("discovery listen started")
+             log("discovery listen started")
              while True:
                  try:
                      data, addr = self.sock.recvfrom(4096)
                      text = data.decode("utf-8", errors="replace").split("|")
                      if len(text) != 5:
-                         print("discovered invalid user")
+                         log("discovered invalid user")
                          continue
                      prefix, version, peer_verify_key, ip, port = text
                      peer_addr = (ip, int(port))
                      if prefix != "NOTEPASSER" or version != VERSION:
-                         print("different version or irrelevant packet")
+                         log("different version or irrelevant packet")
                          continue
                      if peer_verify_key == self.verify_key:
-                         print("discovered self")
+                         log("discovered self")
                          continue
-                     print("discovered user " + peer_verify_key + " with address " + str(peer_addr))
+                     log("discovered user " + peer_verify_key + " with address " + str(peer_addr))
                      self.user_manager.on_user_discovered(peer_verify_key, peer_addr)
                      self.respond_to_discovery_request(peer_verify_key)
                  except socket.timeout:
                      continue
                  except ConnectionResetError:
-                     print("windows badness")
+                     log("windows badness")
                      continue
 
         threading.Thread(target=listen, daemon=True).start()
 
     def respond_to_discovery_request(self, peer_verify_key):
         if peer_verify_key in self.replied_to: return
-        print("sending discovery packet")
+        log("sending discovery packet")
         self.sock.sendto(self.get_broadcast_string().encode("utf-8"), ("255.255.255.255", self.discovery_port)) # this should really have some kind of limiter
         self.replied_to.add(peer_verify_key)
         self.remove_from_replied_to_after_delay(peer_verify_key)
