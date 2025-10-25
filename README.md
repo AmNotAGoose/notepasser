@@ -1,5 +1,8 @@
 # notepasser
 
+## video demo
+https://www.youtube.com/watch?v=Pp1fGudh13I
+
 ## what is it
 a library allowing you to discover and send encrypted messages to people on your same network.
 
@@ -14,3 +17,6 @@ a library allowing you to discover and send encrypted messages to people on your
 
 ## quick start
 - an example peer node is in /cli
+
+## ai notice for siege
+- main script used lots of help from ai but the core is written by myself completely 
