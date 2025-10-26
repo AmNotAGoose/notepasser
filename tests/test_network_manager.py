@@ -13,7 +13,7 @@ def test_send_and_receive():
 
     nm1.connect_to_peer(("127.0.0.1", 32314))
     peer1 = nm1.peers[("127.0.0.1", 32314)]
-    while not peer1.my_box:
+    while not peer1.box:
         time.sleep(0.1)
 
     peer2 = list(nm2.peers.values())[0]

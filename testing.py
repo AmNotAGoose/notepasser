@@ -82,3 +82,4 @@ class DiscoveryManager2:
             self.replied_to.remove(peer_verify_key)
 
         threading.Thread(target=remove, daemon=True).start()
+
