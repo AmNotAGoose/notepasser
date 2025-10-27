@@ -36,15 +36,19 @@ class NetworkManager:
         peer_ip, peer_port = user.addr
         log("trying to connect to " + str(user.addr))
 
+        # see if peer connection already established
         for peer in self.peers.values():
             timeout = 5
             start = time.time()
-            while peer.peer_information is None and time.time() - start < timeout:
+
+            while peer.peer_state.peer_information is None and time.time() - start < timeout:
                 time.sleep(0.1)
-            print(bytes(peer.peer_information['verify_key']).hex(), verify_key)
-            if peer.peer_information and bytes(peer.peer_information['verify_key']).hex() == verify_key:
+
+            log(bytes(peer.peer_state.peer_information['verify_key']).hex(), verify_key)
+            if peer.peer_state.peer_information and bytes(peer.peer_state.peer_information['verify_key']).hex() == verify_key:
                 return peer
 
+        # establish a new peer connection
         try:
             conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn.connect((peer_ip, peer_port))

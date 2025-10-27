@@ -15,4 +15,5 @@ def log(*messages, level=""):
 
     prefix = f"[{cls_name}]" if cls_name else "no class?"
 
-    print(f"{level}{prefix}: {' '.join(messages)}")
+    message_str = ' '.join(str(m) for m in messages)
+    print(f"{level}{prefix}: {message_str}")

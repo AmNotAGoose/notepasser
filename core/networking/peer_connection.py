@@ -28,8 +28,10 @@ class PeerConnection:
         return json.loads(data.decode())
 
     def send_disconnect(self):
-        if self.crypto.box:
+        try:
             payload = {"type": "disconnect"}
             self.conn.sendall(self.crypto.box.encrypt(json.dumps(payload).encode()))
+        except Exception as e:
+            raise e
 
         core.globals.running = False

@@ -25,11 +25,12 @@ class Peer:
         self.conn = conn
         self.addr = addr
 
-        self.peer_state = PeerState(user_manager, my_sign.verify_key)
+        self.peer_state = PeerState(user_manager, my_sign)
         self.peer_crypto = PeerCrypto(self.peer_state, get_trusted_token)
-        self.peer_connection = PeerConnection(self.conn, self.peer_crypto)
+        self.peer_connection = PeerConnection(self.peer_crypto, self.conn)
         self.peer_events = PeerEvents(self.disconnect)
 
+        self._disconnected = False
         self.start()
 
     def start(self):
@@ -49,7 +50,7 @@ class Peer:
         return json.dumps(payload).encode()
 
     def listen_for_connection_information(self):
-        while running:
+        while running and not self.peer_state.peer_information.get("verify_key"):
             try:
                 data = json.loads(self.conn.recv(4096).decode("utf-8"))
 
@@ -71,9 +72,14 @@ class Peer:
             except:
                 self.disconnect()
 
-        threading.Thread(target=self.listen_for_messages, daemon=True).start()
 
-    def listen_for_messages(self):
+        log(self.peer_state.peer_information.get("verify_key"))
+
+        threading.Thread(target=self.listen_for_events, daemon=True).start()
+
+    def listen_for_events(self):
+        log("listening for events")
+        log(self.conn)
         while running:
             try:
                 encrypted_message = self.conn.recv(4096)
@@ -82,11 +88,27 @@ class Peer:
                     break
 
                 event = self.peer_crypto.decrypt_json(encrypted_message)
-                self.peer_events.on_event_received(event)
+                self.peer_events.on_event_received(self.addr, event)
             except Exception as e:
-                log(e)
-                self.disconnect()
+                log(str(e))
+                break
+
+        self.disconnect()
 
     def disconnect(self):
-        self.peer_connection.send_disconnect()
-        self.conn.close()
+        if self._disconnected:
+            return
+        self._disconnected = True
+
+        # send disconnect only if socket is still valid
+        try:
+            if self.conn and isinstance(self.conn, socket):
+                self.peer_connection.send_disconnect()
+        except OSError:
+            pass
+
+        try:
+            if self.conn and isinstance(self.conn, socket):
+                self.conn.close()
+        except OSError:
+            pass

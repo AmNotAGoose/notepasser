@@ -28,7 +28,7 @@ def main():
     discovery = DiscoveryManager(
         ip=ip,
         port=port,
-        discovery_port=discovery_port,
+        broadcast_port=discovery_port,
         verify_key=credentials.get_signing_key().verify_key,
         user_manager=user_manager,
         max_broadcast_number=3
@@ -87,8 +87,8 @@ def main():
 
                 def display_messages():
                     while running and chat_active:
-                        while not peer.message_queue.empty():
-                            addr, message = peer.message_queue.get()
+                        while not peer.peer_events.messages.empty():
+                            addr, message = peer.peer_events.messages.get()
                             print(f"\n[{addr[0]}]: {message['message']}")
                             print("> ", end="", flush=True)
                         time.sleep(0.1)
@@ -104,7 +104,7 @@ def main():
                         peer.disconnect()
                         break
                     elif msg.strip():
-                        peer.send_message(msg)
+                        peer.peer_connection.send(msg)
 
             else:
                 print("[ERROR] Unknown command.")

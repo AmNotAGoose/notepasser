@@ -28,7 +28,7 @@ class DiscoveryManager:
         self.reply_timeout = 3
 
     def get_broadcast_string(self):
-        return f"NOTEPASSER|{VERSION}|{self.verify_key}|{self.addr[0]}|{self.addr[1]}"
+        return f"NOTEPASSER|{VERSION}|{bytes(self.verify_key).hex()}|{self.addr[0]}|{self.addr[1]}"
 
     def start_broadcast(self):
         def broadcast():
@@ -54,13 +54,14 @@ class DiscoveryManager:
                          continue
                      prefix, version, peer_verify_key, ip, port = text
                      peer_addr = (ip, int(port))
+                     peer_verify_key = bytes.fromhex(peer_verify_key)
                      if prefix != "NOTEPASSER" or version != VERSION:
                          log("different version or irrelevant packet")
                          continue
-                     if peer_verify_key == self.verify_key:
+                     if peer_verify_key == bytes(self.verify_key):
                          log("discovered self")
                          continue
-                     log("discovered user " + peer_verify_key + " with address " + str(peer_addr))
+                     log("discovered user " + peer_verify_key.hex() + " with address " + str(peer_addr))
 
                      self.user_manager.on_user_discovered(peer_verify_key, peer_addr)
                      self.respond_to_discovery_request(peer_verify_key)
