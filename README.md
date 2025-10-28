@@ -3,6 +3,9 @@
 ## video demo
 https://www.youtube.com/watch?v=Pp1fGudh13I
 
+## update
+super FALL THEMED update with fall colors and fall everything and its super fall and happy halloween and thanksgiving
+
 ## what is it
 a library allowing you to discover and send encrypted messages to people on your same network.
 
@@ -19,4 +22,4 @@ a library allowing you to discover and send encrypted messages to people on your
 - an example peer node is in /cli
 
 ## ai notice for siege
-- main script used lots of help from ai but the core is written by myself completely 
+- main script used lots of help from ai but the core is written by myself completely (still holds very true)

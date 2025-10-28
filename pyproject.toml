@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "notepasser"
-version = "0.0.2"
+version = "0.0.3"
 authors = [{name = "AmNotAGoose"}]
 description = "Discover users on the same network and send encrypted messages"
 requires-python = ">=3.13"

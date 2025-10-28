@@ -13,18 +13,41 @@ from core.globals import running
 
 class Colors:
     HEADER = "\033[95m"
-    BLUE = "\033[94m"
+    ORANGE = "\033[38;5;208m"
     CYAN = "\033[96m"
-    GREEN = "\033[92m"
+    BROWN = "\033[38;5;94m"
     YELLOW = "\033[93m"
     RED = "\033[91m"
     RESET = "\033[0m"
     BOLD = "\033[1m"
 
 def print_banner():
-    print(f"{Colors.CYAN}{'='*50}")
-    print(f"{Colors.BOLD}        Notepasser {core.globals.VERSION}")
-    print(f"{Colors.CYAN}{'='*50}{Colors.RESET}\n")
+    print(f"{Colors.ORANGE}{'='*50}")
+    print(f"""{Colors.YELLOW}
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠛⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠋⢀⠤⡀⠸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠋⢀⡄⢧⢉⢦⠀⢻⡀⠀⠀⠀⠀⠀⣀⣤⠴⠶⣄⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣞⣁⣴⣑⣪⣐⣮⣘⣀⣸⡇⠀⠀⣠⡴⠚⠉⡀⠤⡄⢸⡆⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠶⠛⢉⡁⢀⣀⠀⠀⠀⠀⠀⠉⠉⠙⠓⠾⣭⣀⠰⡍⢓⠥⠇⠈⡇⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠃⠀⢐⢇⠼⣘⠔⣣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠃⢜⠥⠪⡇⢀⡇⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢰⡟⣦⣄⡀⠀⠀⢿⠀⠀⠩⡌⠖⣡⢚⠊⠀⣰⡷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣧⠃⢸⠇⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⣿⣾⣿⣶⣄⠘⣇⠀⠀⠈⠁⢉⣤⡀⠀⠈⠀⠀⠀⣴⡷⠀⠀⠀⠀⠀⠀⠀⠈⢧⠟⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠐⣯⢺⣿⣿⢿⣿⣷⣜⢧⡀⠀⣰⠟⣼⣇⠀⠀⠀⠀⠀⠀⠀⠀⢠⠲⢍⢏⡂⡀⠀⠘⡇⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⡎⣿⡿⣟⣿⣳⣿⣦⠙⣷⢏⣾⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⢠⢃⡎⡬⢡⣱⠀⠀⡿⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⡹⣿⣿⣻⣿⡽⣿⣧⡏⣽⣿⡿⣿⠀⢀⣤⢞⣿⠀⠀⠀⠀⠃⠜⠆⠗⠁⠀⣰⠇⠀⠀
+⠀⠀⠀⠀⣀⣄⣀⣀⠀⠀⠘⣷⢻⣷⣻⣟⣿⡿⣽⣧⣿⣿⣽⣿⡴⢏⣵⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠀⠀⠀
+⠀⠀⠀⠀⢿⡙⣭⣭⣯⣛⣶⢮⣷⣻⣿⣻⡿⣽⢿⣾⣿⣷⣿⣿⡟⠛⠛⠛⠧⣌⠙⠛⣗⠒⠒⠛⠋⠁⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠈⢷⡽⣿⣻⣿⣻⣿⢿⡿⣟⣯⣿⣎⢿⣟⣯⣽⣿⣾⡀⠀⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠙⢮⣛⢷⡿⣾⣯⢿⣿⢿⣯⠿⣯⢻⣾⣿⣷⣿⣧⡀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⢀⣴⠶⣦
+⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⢭⣽⣿⣿⡿⣟⣿⣶⣭⠛⣾⣿⣿⣿⣽⣲⠆⠀⠀⠀⠀⢸⠃⠀⠀⠀⠀⣰⠟⠁⠀⣸
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⢞⣯⣿⣻⣽⣿⣯⣿⣿⡿⣿⣿⣿⣾⣿⠿⠿⠃⠀⠀⠀⢀⡟⠀⠀⢀⣠⠞⠁⠀⠀⣰⠏
+⠀⠀⠀⠀⠀⠀⢀⣴⢏⣾⣿⣿⣯⣿⣿⣷⣻⣿⣾⣽⠟⣿⣧⠀⠀⠀⠀⠀⠀⠀⣠⣞⣠⣤⠶⠋⠁⠀⠀⢀⡼⠋⠀
+⠀⠀⠀⠀⠀⠀⠈⠙⠛⠛⠛⠛⠉⠉⢰⣏⣿⡿⢿⣅⠀⢸⣿⡄⠀⠀⠀⠀⣠⡴⠋⠉⠁⠀⠀⠀⣀⣤⠶⠋⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠋⠁⠀⠀⠉⠓⠾⠿⠤⠤⠶⠖⠻⠷⠶⠤⠶⠶⠖⠚⠋⠉⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀art from https://emojicombos.com/autumn-ascii-art⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀""")
+    print(f"{Colors.BOLD}{Colors.RED}        Notepasser {core.globals.VERSION} FALL UPDATE")
+    print(f"{Colors.ORANGE}{'='*50}{Colors.RESET}\n")
 
 def main(storage_location=None):
     storage = StorageManager(storage_location) if storage_location else StorageManager()
@@ -37,7 +60,7 @@ def main(storage_location=None):
     sock.bind((ip, 0))
     port = sock.getsockname()[1]
     sock.close()
-    print(f"{Colors.GREEN}[INIT] Local IP: {ip}:{port}{Colors.RESET}")
+    print(f"{Colors.BROWN}[INIT] Local IP: {ip}:{port}{Colors.RESET}")
 
     network = NetworkManager(ip, port, credentials, user_manager, input)
     discovery = DiscoveryManager(
@@ -51,16 +74,16 @@ def main(storage_location=None):
 
     discovery.start_listening()
     discovery.start_broadcast()
-    print(f"{Colors.GREEN}[DISCOVERY] Listening and broadcasting started...{Colors.RESET}")
+    print(f"{Colors.BROWN}[DISCOVERY] Listening and broadcasting started...{Colors.RESET}")
 
     print_banner()
 
     try:
         while running:
             print(f"{Colors.YELLOW}\nCOMMANDS:{Colors.RESET}")
-            print(f"{Colors.BLUE}- discover{Colors.RESET} - Show discovered peers")
-            print(f"{Colors.BLUE}- connect{Colors.RESET} - Connect to a peer by index")
-            print(f"{Colors.BLUE}- exit{Colors.RESET} - Quit program")
+            print(f"{Colors.ORANGE}- discover{Colors.RESET} - Show discovered peers")
+            print(f"{Colors.ORANGE}- connect{Colors.RESET} - Connect to a peer by index")
+            print(f"{Colors.ORANGE}- exit{Colors.RESET} - Quit program")
             print(f"{Colors.CYAN}{'-'*30}{Colors.RESET}")
 
             cmd = input(f"{Colors.BOLD}> {Colors.RESET}").strip().lower()
@@ -74,7 +97,7 @@ def main(storage_location=None):
                 if not peers:
                     print(f"{Colors.YELLOW}[DISCOVERY] No peers found yet.{Colors.RESET}")
                 else:
-                    print(f"{Colors.GREEN}[DISCOVERY] Found peers:{Colors.RESET}")
+                    print(f"{Colors.BROWN}[DISCOVERY] Found peers:{Colors.RESET}")
                     for i, p in enumerate(peers):
                         print(f"  [{i}] {p}")
 
@@ -84,7 +107,7 @@ def main(storage_location=None):
                     print(f"{Colors.YELLOW}[CONNECT] No peers discovered.{Colors.RESET}")
                     continue
 
-                print(f"{Colors.GREEN}Select peer index:{Colors.RESET}")
+                print(f"{Colors.BROWN}Select peer index:{Colors.RESET}")
                 for i, p in enumerate(peers):
                     print(f"  [{i}] {p}")
                 try:
@@ -99,7 +122,7 @@ def main(storage_location=None):
                     print(f"{Colors.RED}[CONNECT] Failed to connect.{Colors.RESET}")
                     continue
 
-                print(f"{Colors.GREEN}[CONNECTED] Messaging session started with {target}.{Colors.RESET}")
+                print(f"{Colors.BROWN}[CONNECTED] Messaging session started with {target}.{Colors.RESET}")
                 print(f"{Colors.YELLOW}Type '|exit|' to leave chat{Colors.RESET}\n")
 
                 chat_active = True
@@ -135,4 +158,4 @@ def main(storage_location=None):
         for peer in list(network.peers.values()):
             peer.disconnect()
         discovery.running = False
-        print(f"{Colors.GREEN}[EXIT] Shutdown complete.{Colors.RESET}")
+        print(f"{Colors.BROWN}[EXIT] Shutdown complete.{Colors.RESET}")
