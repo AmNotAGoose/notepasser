@@ -10,8 +10,12 @@ from core.debug.debugging import log
 from core.globals import running
 
 
-def main():
-    storage = StorageManager()
+def main(storage_location=None):
+    if storage_location:
+        storage = StorageManager(storage_location)
+    else:
+        storage = StorageManager()
+
     user_manager = UserManager(storage)
     credentials = CredentialsManager(storage)
 
@@ -104,7 +108,7 @@ def main():
                         peer.disconnect()
                         break
                     elif msg.strip():
-                        peer.peer_connection.send(msg)
+                        peer.peer_connection.send_message(msg)
 
             else:
                 print("[ERROR] Unknown command.")
@@ -117,7 +121,3 @@ def main():
             peer.disconnect()
         discovery.running = False
         print("[EXIT] Shutdown complete.")
-
-
-if __name__ == "__main__":
-    main()

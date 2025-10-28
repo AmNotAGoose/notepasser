@@ -11,6 +11,7 @@ def log(*messages, level=""):
     cls_name = None
 
     if 'self' in frame.f_locals:
+
         cls_name = type(frame.f_locals['self']).__name__
 
     prefix = f"[{cls_name}]" if cls_name else "no class?"

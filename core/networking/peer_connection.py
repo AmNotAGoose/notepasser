@@ -9,29 +9,37 @@ from core.networking.peer_crypto import PeerCrypto
 
 
 class PeerConnection:
-    def __init__(self, crypto: PeerCrypto, conn):
+    def __init__(self, disconnect, crypto: PeerCrypto, conn):
+        self.disconnect = disconnect
+
         self.crypto = crypto
         self.conn = conn
 
-    def send(self, message: dict, encrypt=True):
+    def _send(self, message: dict, encrypt=True):
         data = json.dumps(message).encode()
         if encrypt and self.crypto.box:
             data = self.crypto.box.encrypt(data)
-        self.conn.sendall(data)
+
+        try:
+            self.conn.sendall(data)
+        except (ConnectionError, OSError) as e:
+            self.disconnect("_send failed: " + str(e))
 
     def receive(self, decrypt=True, buffer=4096):
-        data = self.conn.recv(buffer)
-        if not data:
-            return None
-        if decrypt and self.crypto.box:
-            data = self.crypto.box.decrypt(data)
-        return json.loads(data.decode())
+        try:
+            data = self.conn.recv(buffer)
+            if not data:
+                return None
+            if decrypt and self.crypto.box:
+                data = self.crypto.box.decrypt(data)
+            return json.loads(data.decode())
+        except (ConnectionError, OSError) as e:
+            self.disconnect("receive failed: " + str(e))
+
+    def send_message(self, message):
+        payload = {"type": "message", "message": message}
+        self._send(payload)
 
     def send_disconnect(self):
-        try:
-            payload = {"type": "disconnect"}
-            self.conn.sendall(self.crypto.box.encrypt(json.dumps(payload).encode()))
-        except Exception as e:
-            raise e
-
-        core.globals.running = False
+        payload = {"type": "disconnect"}
+        self._send(payload)

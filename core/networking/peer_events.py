@@ -12,11 +12,9 @@ class PeerEvents:
         self.token_requests = queue.Queue()
 
     def on_event_received(self, addr, event):
-        if not event["type"]:
+        if not "type" in event:
             log(f"[{addr}] event missing type! {json.dumps(event)}")
             return
-
-        log(f"[{addr}] {event}")
 
         match event["type"]:
             case "message":
@@ -24,9 +22,7 @@ class PeerEvents:
             case "trusted_token":
                 self.token_requests.put([addr, event])
             case "disconnect":
-                log(f"disconnect gracefully")
-                self.disconnect()
+                self.disconnect("disconnect gracefully")
                 return
             case _:
-                log("broke")
-                self.disconnect()
+                self.disconnect("message type not matched")

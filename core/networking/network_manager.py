@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+import traceback
 
 from core.storage.credentials_manager import CredentialsManager
 from core.globals import running
@@ -15,6 +16,7 @@ class NetworkManager:
         self.user_manager = user_manager
         self.get_trusted_token_input = get_trusted_token_input
         self.peers = {}
+        self.peers_lock = threading.Lock()
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((ip, port))
@@ -24,12 +26,15 @@ class NetworkManager:
 
     def listen_for_peers(self):
         while running:
-            conn, addr = self.sock.accept()
-            log("accepted peer " + str(addr))
-            if addr in self.peers:
-                log("already exists")
-                return
-            self.peers[addr] = Peer(self, self.user_manager, conn, addr, self.credentials_manager.get_signing_key(), self.get_trusted_token_input)
+            try:
+                conn, addr = self.sock.accept()
+                log("accepted peer " + str(addr))
+                if addr in self.peers:
+                    log("already exists")
+                    continue
+                self.peers[addr] = Peer(self, self.user_manager, conn, addr, self.credentials_manager.get_signing_key(), self.get_trusted_token_input)
+            except (ConnectionError, socket.timeout):
+                continue
 
     def connect_to_peer(self, verify_key):
         user = self.user_manager.get_user(verify_key)
@@ -44,8 +49,8 @@ class NetworkManager:
             while peer.peer_state.peer_information is None and time.time() - start < timeout:
                 time.sleep(0.1)
 
-            log(bytes(peer.peer_state.peer_information['verify_key']).hex(), verify_key)
-            if peer.peer_state.peer_information and bytes(peer.peer_state.peer_information['verify_key']).hex() == verify_key:
+            log(bytes(peer.peer_state.peer_information['verify_key']).hex(), bytes(verify_key).hex())
+            if peer.peer_state.peer_information and bytes(peer.peer_state.peer_information['verify_key']).hex() == bytes(verify_key).hex():
                 return peer
 
         # establish a new peer connection
@@ -57,9 +62,5 @@ class NetworkManager:
             log("connected to " + str((peer_ip, peer_port)))
             return self.peers[(peer_ip, peer_port)]
         except Exception as e:
-            log(e)
+            log(f"error connecting to {peer_ip}:{peer_port}: {e}", traceback.format_exc())
 
-    def disconnect_peer(self, addr):
-        if addr in self.peers:
-            del self.peers[addr]
-            log(f"disconnected peer {addr}")
