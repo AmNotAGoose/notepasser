@@ -53,7 +53,7 @@ class Peer:
         return json.dumps(payload).encode()
 
     def listen_for_connection_information(self):
-        while running and not self.peer_state.peer_information.get("verify_key"):
+        while running and not self._disconnected and not self.peer_state.peer_information.get("verify_key"):
             data = self.peer_connection.receive()
 
             peer_encryption_key = bytes.fromhex(data["encryption_key"])
@@ -80,7 +80,7 @@ class Peer:
         log("listening for events")
         log(self.conn)
 
-        while running:
+        while running and not self._disconnected:
             event = self.peer_connection.receive()
             log(event)
             self.peer_events.on_event_received(self.addr, event)
@@ -106,3 +106,5 @@ class Peer:
                 self.conn.close()
         except OSError:
             pass
+
+        self.network_manager.remove_peer(self, reason)

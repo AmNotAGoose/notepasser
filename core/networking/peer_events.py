@@ -12,7 +12,7 @@ class PeerEvents:
         self.token_requests = queue.Queue()
 
     def on_event_received(self, addr, event):
-        if not "type" in event:
+        if not event or not "type" in event:
             log(f"[{addr}] event missing type! {json.dumps(event)}")
             return
 

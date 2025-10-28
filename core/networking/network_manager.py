@@ -64,3 +64,9 @@ class NetworkManager:
         except Exception as e:
             log(f"error connecting to {peer_ip}:{peer_port}: {e}", traceback.format_exc())
 
+    def remove_peer(self, peer, reason=None):
+        peer.disconnect(reason)
+        with self.peers_lock:
+            keys_to_remove = [k for k, v in self.peers.items() if v is peer]
+            for k in keys_to_remove:
+                del self.peers[k]
