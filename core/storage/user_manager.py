@@ -11,6 +11,9 @@ class UserManager:
 
         self.reload_contacts()
 
+    def set_discovered(self, discovered):
+        self.discovered = discovered
+
     def reload_contacts(self):
         self.storage_manager.ensure_file_exists('contacts')
         self.contacts = {}

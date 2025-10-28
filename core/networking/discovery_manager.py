@@ -33,7 +33,7 @@ class DiscoveryManager:
     def start_broadcast(self):
         def broadcast():
             log("discovery broadcast started")
-            self.user_manager.discovered = []
+            self.user_manager.set_discovered([])
             for i in range(0, self.max_broadcast_number):
                 message = self.get_broadcast_string()
                 log("sending discovery packet " + message)
