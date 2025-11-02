@@ -33,8 +33,9 @@ class DiscoveryManager:
         self.replied_to = set()
         self.reply_timeout = 3
 
-    def get_broadcast_string(self):
-        return f"NOTEPASSER|{VERSION}|{bytes(self.verify_key).hex()}|{self.listen_addr[0]}|{self.listen_addr[1]}"
+
+    def get_broadcast_string(self, disconnect=False):
+        return f"NOTEPASSER|{VERSION}|{bytes(self.verify_key).hex()}|{self.listen_addr[0]}|{self.listen_addr[1]}|{'DISCONNECT' if disconnect else 'CONNECT'}"
 
     def start_broadcast(self):
         def broadcast():
@@ -55,10 +56,11 @@ class DiscoveryManager:
                  try:
                      data, addr = self.sock.recvfrom(4096)
                      text = data.decode("utf-8", errors="replace").split("|")
-                     if len(text) != 5:
+                     if len(text) != 6:
                          log("discovered invalid user")
                          continue
-                     prefix, version, peer_verify_key, ip, port = text
+                     prefix, version, peer_verify_key, ip, port, disconnect = text
+                     disconnect = disconnect == "DISCONNECT"
                      peer_addr = (ip, int(port))
                      peer_verify_key = bytes.fromhex(peer_verify_key)
                      if prefix != "NOTEPASSER" or version != VERSION:
@@ -69,8 +71,8 @@ class DiscoveryManager:
                          continue
                      log("discovered user " + peer_verify_key.hex() + " with address " + str(peer_addr))
 
-                     self.user_manager.on_user_discovered(peer_verify_key, peer_addr)
-                     self.respond_to_discovery_request(peer_verify_key)
+                     self.user_manager.on_user_discovered(peer_verify_key, peer_addr, disconnect)
+                     if not disconnect: self.respond_to_discovery_request(peer_verify_key)
                  except socket.timeout:
                      continue
                  except ConnectionResetError:
@@ -95,5 +97,11 @@ class DiscoveryManager:
 
         threading.Thread(target=remove, daemon=True).start()
 
+    def stop(self):
+        self.stop_broadcasting()
+        self.listen_executor.shutdown(wait=False)
+        message = self.get_broadcast_string(disconnect=True)
+        log("shutting down: ", message)
+        self.sock.sendto(message.encode('utf-8'), ("255.255.255.255", self.broadcast_port))
+
     def stop_broadcasting(self): self.broadcast_executor.shutdown(wait=False)
-    def stop_listening(self): self.listen_executor.shutdown(wait=False)

@@ -12,7 +12,7 @@ class GuiNode(Node):
 
         self.app = QApplication(sys.argv)
 
-        self.chat_window = ChatWindow()
+        self.chat_window = ChatWindow(self)
         self.chat_window.show()
 
         self.app.exec()

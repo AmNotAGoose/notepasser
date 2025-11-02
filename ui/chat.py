@@ -9,8 +9,9 @@ class ChatWindow(QWidget):
     send_message_signal = Signal(str)
     user_selected_signal = Signal(str)
 
-    def __init__(self):
+    def __init__(self, node):
         super().__init__()
+        self.node = node
         self.window = loadUiWidget("windows/chat_window")
 
         layout = QVBoxLayout(self)
@@ -30,15 +31,19 @@ class ChatWindow(QWidget):
         self.users_list_view = self.window.findChild(QListView, "usersListView")
         self.users_list_model = QStandardItemModel()
         self.users_list_view.setModel(self.users_list_model)
+        self.node.user_manager.on("peers_discovered", self.load_users_list)
 
+        self.users_list_view.doubleClicked.connect(self._on_user_selected)
         self.send_button.clicked.connect(self._on_send_button_clicked)
 
-    def load_users_list(self, users_info):
-        if not users_info:
-            self.users_list_model.clear()
+    def load_users_list(self, users_list):
+        self.users_list_model.clear()
+        if not users_list:
+            return
 
-        for user in users_info["users"]:
-            self.users_list_model.appendRow(user)
+        for user in users_list:
+            item = QStandardItem(bytes(user).hex())
+            self.users_list_model.appendRow(item)
 
     def load_chat(self, chat_info):
         if not chat_info:

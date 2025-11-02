@@ -147,5 +147,5 @@ def main(storage_location=None):
         print(f"{Colors.YELLOW}[CLEANUP] Disconnecting all peers...{Colors.RESET}")
         for peer in list(network.peers.values()):
             peer.disconnect()
-        discovery.running = False
+        discovery.stop()
         print(f"{Colors.BROWN}[EXIT] Shutdown complete.{Colors.RESET}")

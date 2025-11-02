@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QListView" name="usersList_2">
+     <widget class="QListView" name="usersListView">
       <property name="minimumSize">
        <size>
         <width>250</width>
