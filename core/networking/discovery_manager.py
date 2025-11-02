@@ -6,12 +6,16 @@ from concurrent.futures.thread import ThreadPoolExecutor
 import core.globals
 from core.globals import VERSION
 from core.debug.debugging import log
+from core.networking.network_manager import NetworkManager
+from core.storage.credentials_manager import CredentialsManager
+from core.storage.user_manager import UserManager
 
 
 class DiscoveryManager:
-    def __init__(self, verify_key, user_manager, max_broadcast_number):
+    def __init__(self, credentials_manager: CredentialsManager, user_manager: UserManager, network_manager: NetworkManager, max_broadcast_number):
         self.broadcast_port = core.globals.BROADCAST_PORT
-        self.verify_key = verify_key
+        self.verify_key = credentials_manager.get_signing_key().verify_key
+        self.listen_addr = network_manager.listen_sock.getsockname()
 
         self.user_manager = user_manager
         self.max_broadcast_number = max_broadcast_number
@@ -19,9 +23,9 @@ class DiscoveryManager:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # do NOT allow this for real
-        sock.bind(("0.0.0.0", self.broadcast_port))
+        sock.bind((socket.gethostbyname(socket.gethostname()), self.broadcast_port))
+
         self.sock = sock
-        self.addr = sock.getsockname()
 
         self.broadcast_executor = ThreadPoolExecutor(max_workers=1)
         self.listen_executor = ThreadPoolExecutor(max_workers=1)
@@ -30,7 +34,7 @@ class DiscoveryManager:
         self.reply_timeout = 3
 
     def get_broadcast_string(self):
-        return f"NOTEPASSER|{VERSION}|{bytes(self.verify_key).hex()}|{self.addr[0]}|{self.addr[1]}"
+        return f"NOTEPASSER|{VERSION}|{bytes(self.verify_key).hex()}|{self.listen_addr[0]}|{self.listen_addr[1]}"
 
     def start_broadcast(self):
         def broadcast():
@@ -90,3 +94,6 @@ class DiscoveryManager:
             self.replied_to.remove(peer_verify_key)
 
         threading.Thread(target=remove, daemon=True).start()
+
+    def stop_broadcasting(self): self.broadcast_executor.shutdown(wait=False)
+    def stop_listening(self): self.listen_executor.shutdown(wait=False)

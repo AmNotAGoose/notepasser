@@ -54,17 +54,11 @@ def main(storage_location=None):
     user_manager = UserManager(storage)
     credentials = CredentialsManager(storage)
 
-    ip = socket.gethostbyname(socket.gethostname())
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((ip, 0))
-    port = sock.getsockname()[1]
-    sock.close()
-    print(f"{Colors.BROWN}[INIT] Local IP: {ip}:{port}{Colors.RESET}")
-
-    network = NetworkManager(ip, port, credentials, user_manager, input)
+    network = NetworkManager(credentials, user_manager, input)
     discovery = DiscoveryManager(
-        verify_key=credentials.get_signing_key().verify_key,
+        credentials_manager=credentials,
         user_manager=user_manager,
+        network_manager=network,
         max_broadcast_number=3
     )
 

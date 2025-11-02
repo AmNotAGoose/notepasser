@@ -11,23 +11,24 @@ from core.debug.debugging import log
 
 
 class NetworkManager:
-    def __init__(self, ip, port, credentials_manager: CredentialsManager, user_manager: UserManager, get_trusted_token_input):
+    def __init__(self, credentials_manager: CredentialsManager, user_manager: UserManager, get_trusted_token_input):
         self.credentials_manager = credentials_manager
         self.user_manager = user_manager
         self.get_trusted_token_input = get_trusted_token_input
         self.peers = {}
         self.peers_lock = threading.Lock()
 
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind((ip, port))
-        self.sock.listen(5)
+        listen_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        listen_sock.bind((socket.gethostbyname(socket.gethostname()), 0))
+        listen_sock.listen(5)
+        self.listen_sock = listen_sock
 
         threading.Thread(target=self.listen_for_peers, daemon=True).start()
 
     def listen_for_peers(self):
         while running:
             try:
-                conn, addr = self.sock.accept()
+                conn, addr = self.listen_sock.accept()
                 log("accepted peer " + str(addr))
                 if addr in self.peers:
                     log("already exists")
