@@ -6,11 +6,16 @@ from core.node import Node
 from ui.chat import ChatWindow
 
 
-node = Node()
+class GuiNode(Node):
+    def __init__(self, get_trusted_token_input):
+        super().__init__(get_trusted_token_input)
 
-app = QApplication(sys.argv)
+        self.app = QApplication(sys.argv)
 
-window = ChatWindow()
-window.show()
+        self.chat_window = ChatWindow()
+        self.chat_window.show()
 
-app.exec()
+        self.app.exec()
+
+
+GuiNode(input)

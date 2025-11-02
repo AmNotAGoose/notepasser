@@ -6,8 +6,7 @@ from core.storage.user_manager import UserManager
 
 
 class Node:
-    def __init__(self, get_user_message_input, get_trusted_token_input, config_dir=".notepasser"):
-        self.get_user_message_input = get_user_message_input
+    def __init__(self, get_trusted_token_input, config_dir=".notepasser"):
         self.storage_manager = StorageManager(config_dir)
         self.user_manager = UserManager(self.storage_manager)
         self.credentials_manager = CredentialsManager(self.storage_manager)
@@ -17,4 +16,5 @@ class Node:
 
         self.discovery_manager.start_listening()
         self.discovery_manager.start_broadcast()
+
 
