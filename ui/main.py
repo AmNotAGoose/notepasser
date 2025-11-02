@@ -17,5 +17,4 @@ class GuiNode(Node):
 
         self.app.exec()
 
-
 GuiNode(input)
