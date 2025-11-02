@@ -29,8 +29,8 @@ sock1.bind(('', 0))
 sock2 = socket.socket()
 sock2.bind(('', 0))
 
-dm1 = DiscoveryManager(sock1.getsockname()[0], sock1.getsockname()[1], core.globals.DISCOVERY_PORT, vkey1, um1, 3)
-dm2 = DiscoveryManager(sock2.getsockname()[0], sock2.getsockname()[1], core.globals.DISCOVERY_PORT, vkey2, um2, 3)
+dm1 = DiscoveryManager(vkey1, um1, 3)
+dm2 = DiscoveryManager(vkey2, um2, 3)
 
 dm1.start_listening()
 dm2.start_listening()

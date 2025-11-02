@@ -54,7 +54,6 @@ def main(storage_location=None):
     user_manager = UserManager(storage)
     credentials = CredentialsManager(storage)
 
-    discovery_port = 33311
     ip = socket.gethostbyname(socket.gethostname())
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((ip, 0))
@@ -64,9 +63,6 @@ def main(storage_location=None):
 
     network = NetworkManager(ip, port, credentials, user_manager, input)
     discovery = DiscoveryManager(
-        ip=ip,
-        port=port,
-        broadcast_port=discovery_port,
         verify_key=credentials.get_signing_key().verify_key,
         user_manager=user_manager,
         max_broadcast_number=3

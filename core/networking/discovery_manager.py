@@ -3,14 +3,14 @@ import threading
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
+import core.globals
 from core.globals import VERSION
 from core.debug.debugging import log
 
 
 class DiscoveryManager:
-    def __init__(self, ip, port, broadcast_port, verify_key, user_manager, max_broadcast_number):
-        self.addr = (ip, port)
-        self.broadcast_port = int(broadcast_port)
+    def __init__(self, verify_key, user_manager, max_broadcast_number):
+        self.broadcast_port = core.globals.BROADCAST_PORT
         self.verify_key = verify_key
 
         self.user_manager = user_manager
@@ -21,6 +21,7 @@ class DiscoveryManager:
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # do NOT allow this for real
         sock.bind(("0.0.0.0", self.broadcast_port))
         self.sock = sock
+        self.addr = sock.getsockname()
 
         self.broadcast_executor = ThreadPoolExecutor(max_workers=1)
         self.listen_executor = ThreadPoolExecutor(max_workers=1)
