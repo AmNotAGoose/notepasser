@@ -10,8 +10,9 @@ from core.debug.debugging import log
 class DiscoveryManager:
     def __init__(self, ip, port, broadcast_port, verify_key, user_manager, max_broadcast_number):
         self.addr = (ip, port)
-        self.broadcast_port = broadcast_port
+        self.broadcast_port = int(broadcast_port)
         self.verify_key = verify_key
+
         self.user_manager = user_manager
         self.max_broadcast_number = max_broadcast_number
 
