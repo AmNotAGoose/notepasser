@@ -57,7 +57,7 @@ class ChatWindow(QWidget):
 
     def _on_user_selected(self):
         selected_indexes = self.users_list_view.selectedIndexes()[0]
-        user = self.users_list_model.data(selected_indexes[0], Qt.DisplayRole) if selected_indexes else None
+        user = self.users_list_model.data(selected_indexes, Qt.DisplayRole) if selected_indexes else None
         self.user_selected_signal.emit(user)
 
     def _on_send_button_clicked(self):
