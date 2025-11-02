@@ -18,10 +18,16 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QListView" name="users">
+       <widget class="QListView" name="usersList">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>350</width>
+          <width>250</width>
           <height>16777215</height>
          </size>
         </property>
@@ -29,16 +35,26 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="sizeConstraint">
+         <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+        </property>
         <item>
-         <widget class="QListView" name="listView_2"/>
+         <widget class="QListView" name="messagesListView">
+          <property name="minimumSize">
+           <size>
+            <width>350</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLineEdit" name="messageInput"/>
+           <widget class="QLineEdit" name="messageLineEdit"/>
           </item>
           <item>
-           <widget class="QPushButton" name="sendMessage">
+           <widget class="QPushButton" name="sendMessageButton">
             <property name="text">
              <string>PushButton</string>
             </property>
