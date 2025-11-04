@@ -40,7 +40,7 @@ class PeerConnection:
     def send_message(self, message):
         payload = {"type": "message_received", "message": message}
         self._send(payload)
-        self.peer_events.on_event_received("message_sent")
+        self.peer_events.on_event_received({ "type": "message_sent", "message": message })
 
     def send_disconnect(self):
         payload = {"type": "disconnect"}

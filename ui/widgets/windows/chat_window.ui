@@ -64,7 +64,7 @@
             <item>
              <widget class="QPushButton" name="sendMessageButton">
               <property name="text">
-               <string>PushButton</string>
+               <string>Send</string>
               </property>
              </widget>
             </item>
@@ -114,14 +114,6 @@
      <height>33</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuhlello">
-    <property name="title">
-     <string>hlello</string>
-    </property>
-    <addaction name="actionhello"/>
-    <addaction name="action123"/>
-   </widget>
-   <addaction name="menuhlello"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionhello">

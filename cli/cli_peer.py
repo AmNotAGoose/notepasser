@@ -121,7 +121,7 @@ def main(storage_location=None):
                     while running and chat_active:
                         while not peer.peer_events.messages.empty():
                             addr, message = peer.peer_events.messages.get()
-                            print(f"\n{Colors.CYAN}[{addr[0]}]:{Colors.RESET} {message['message']}")
+                            print(f"\n{Colors.CYAN}[{bytes(addr).hex()[:6]}]:{Colors.RESET} {message['message']}")
                             print(f"{Colors.BOLD}> {Colors.RESET}", end="", flush=True)
                         time.sleep(0.1)
 
