@@ -18,6 +18,7 @@ class GuiNode(Node):
         self.chat_window.show()
         self.chat_window.user_selected_signal.connect(self.chat_selected)
         self.chat_window.send_message_signal.connect(self.send_message)
+        self.chat_window.window_closed_signal.connect(self.disconnect)
 
         self.cur_peer = None
 
@@ -55,5 +56,9 @@ class GuiNode(Node):
     def send_message(self, message_content):
         if not self.cur_peer: return
         self.cur_peer.peer_connection.send_message(message_content)
+
+    def disconnect(self):
+        if not self.cur_peer: return
+        self.cur_peer.disconnect()
 
 GuiNode(input)

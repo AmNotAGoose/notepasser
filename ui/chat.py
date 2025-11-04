@@ -3,6 +3,7 @@ from PySide6.QtGui import QStandardItemModel, QStandardItem, Qt
 from PySide6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QListView, QWidget, QVBoxLayout, QStackedLayout, \
     QStackedWidget
 
+import core.globals
 from core.debug.debugging import log
 from ui.utils import loadUiWidget
 
@@ -10,6 +11,7 @@ from ui.utils import loadUiWidget
 class ChatWindow(QWidget):
     send_message_signal = Signal(str)
     user_selected_signal = Signal(str)
+    window_closed_signal = Signal()
 
     def __init__(self, node):
         super().__init__()
@@ -18,6 +20,7 @@ class ChatWindow(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.window)
+        self.setWindowTitle(f"Notepasser {core.globals.VERSION}")
         self.setLayout(layout)
 
         self.chat_stack = self.window.findChild(QStackedWidget, "chatStackedWidget")
@@ -47,11 +50,10 @@ class ChatWindow(QWidget):
             item = QStandardItem(bytes(user).hex())
             self.users_list_model.appendRow(item)
 
-    def load_chat(self, queued_messages):
-        if not queued_messages:
-            self.chat_stack.setCurrentIndex(1)
-            return
+    def unload_chat(self):
+        self.chat_stack.setCurrentIndex(1)
 
+    def load_chat(self, queued_messages):
         self.chat_stack.setCurrentIndex(0)
         for message in queued_messages:
             item = QStandardItem(message)
@@ -73,3 +75,7 @@ class ChatWindow(QWidget):
         if message:
             self.send_message_signal.emit(message)
             self.message_line_edit.clear()
+
+    def closeEvent(self, event, /):
+        self.window_closed_signal.emit()
+        event.accept()

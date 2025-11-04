@@ -1,5 +1,5 @@
 VERSION = "0.0.3"
 BROADCAST_PORT = 33311
 running = True
-debug = True
-do_not_log = ["DiscoveryManager"]
+debug = False
+do_not_log = ["DiscoveryManager", "Listener"]

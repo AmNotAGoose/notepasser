@@ -1,10 +1,10 @@
 # notepasser
 
 ## video demo
-https://www.youtube.com/watch?v=Pp1fGudh13I
+https://youtu.be/G_Q85QDvGYc
 
-## update
-super FALL THEMED update with fall colors and fall everything and its super fall and happy halloween and thanksgiving
+## update 2
+added GUI, improved the code quality a lot, fixed lots of bugs
 
 ## what is it
 a library allowing you to discover and send encrypted messages to people on your same network.
@@ -12,6 +12,7 @@ a library allowing you to discover and send encrypted messages to people on your
 ## features
 - discover users on the same network
 - send encrypted messages (NOT mitm resistant in the slightest)
+- connect across different clients
 - (future) have a preset rotating token which resets together at the start of each session
 - gracefully connect and disconnect
 
@@ -19,7 +20,9 @@ a library allowing you to discover and send encrypted messages to people on your
 - run `pip install notepasser`
 
 ## quick start
-- an example peer node is in /cli
+- TUI client by running cli/cli_peer.py
+- GUI client by running ui/main.py
 
 ## ai notice for siege
 - main script used lots of help from ai but the core is written by myself completely (still holds very true)
+- this week's update written without ai
