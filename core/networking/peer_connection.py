@@ -9,7 +9,8 @@ from core.networking.peer_crypto import PeerCrypto
 
 
 class PeerConnection:
-    def __init__(self, disconnect, crypto: PeerCrypto, conn):
+    def __init__(self, disconnect, crypto: PeerCrypto, conn, peer_events):
+        self.peer_events = peer_events
         self.disconnect = disconnect
 
         self.crypto = crypto
@@ -37,8 +38,9 @@ class PeerConnection:
             self.disconnect("receive failed: " + str(e))
 
     def send_message(self, message):
-        payload = {"type": "message", "message": message}
+        payload = {"type": "message_received", "message": message}
         self._send(payload)
+        self.peer_events.on_event_received("message_sent")
 
     def send_disconnect(self):
         payload = {"type": "disconnect"}

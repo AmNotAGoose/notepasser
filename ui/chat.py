@@ -2,6 +2,8 @@ from PySide6.QtCore import Signal
 from PySide6.QtGui import QStandardItemModel, QStandardItem, Qt
 from PySide6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QListView, QWidget, QVBoxLayout, QStackedLayout, \
     QStackedWidget
+
+from core.debug.debugging import log
 from ui.utils import loadUiWidget
 
 
@@ -31,7 +33,7 @@ class ChatWindow(QWidget):
         self.users_list_view = self.window.findChild(QListView, "usersListView")
         self.users_list_model = QStandardItemModel()
         self.users_list_view.setModel(self.users_list_model)
-        self.node.user_manager.on("peers_discovered", self.load_users_list)
+        self.node.user_manager.listener.subscribe("peers_discovered", self.load_users_list)
 
         self.users_list_view.doubleClicked.connect(self._on_user_selected)
         self.send_button.clicked.connect(self._on_send_button_clicked)
@@ -45,15 +47,21 @@ class ChatWindow(QWidget):
             item = QStandardItem(bytes(user).hex())
             self.users_list_model.appendRow(item)
 
-    def load_chat(self, chat_info):
-        if not chat_info:
+    def load_chat(self, queued_messages):
+        if not queued_messages:
             self.chat_stack.setCurrentIndex(1)
             return
 
         self.chat_stack.setCurrentIndex(0)
-        for message in chat_info["messages"]:
+        for message in queued_messages:
             item = QStandardItem(message)
             self.messages_list_model.appendRow(item)
+
+    def add_message_to_chat(self, message):
+        self.chat_stack.setCurrentIndex(0)
+
+        item = QStandardItem(message)
+        self.messages_list_model.appendRow(item)
 
     def _on_user_selected(self):
         selected_indexes = self.users_list_view.selectedIndexes()[0]

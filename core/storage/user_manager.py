@@ -1,5 +1,6 @@
 from core.storage.storage_manager import StorageManager
 from core.models.user_model import UserModel
+from core.utils.listener import Listener
 
 
 class UserManager:
@@ -11,19 +12,7 @@ class UserManager:
         self.discovered = [] # updated by discovery manager
 
         self.reload_contacts()
-
-        self.subscribers = {
-            "peers_discovered": [],
-        }
-
-    def on(self, event_name, callback):
-        if event_name not in self.subscribers:
-            raise ValueError(f"Unknown event: {event_name}")
-        self.subscribers[event_name].append(callback)
-
-    def _emit(self, event_name, *args, **kwargs):
-        for callback in self.subscribers.get(event_name, []):
-            callback(*args, **kwargs)
+        self.listener = Listener(["peers_discovered"])
 
     def set_discovered(self, discovered):
         self.discovered = discovered
@@ -52,4 +41,4 @@ class UserManager:
             self.discovered.append(verify_key)
         elif verify_key in self.discovered and disconnect:
             self.discovered.remove(verify_key)
-        self._emit("peers_discovered", self.discovered)
+        self.listener.emit("peers_discovered", self.discovered)

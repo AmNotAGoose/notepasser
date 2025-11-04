@@ -1,16 +1,11 @@
 import json
-import queue
 import random
 import threading
-import time
-from json import JSONDecodeError
-from socket import socket, timeout
+from socket import socket
 
-from nacl.exceptions import BadSignatureError
-from nacl.public import PrivateKey, Box, PublicKey
+from nacl.public import PublicKey
 from nacl.signing import SigningKey, VerifyKey
 
-import core
 from core.globals import running
 from core.networking.peer_connection import PeerConnection
 from core.networking.peer_crypto import PeerCrypto
@@ -18,6 +13,7 @@ from core.networking.peer_events import PeerEvents
 from core.networking.peer_state import PeerState
 from core.storage.user_manager import UserManager
 from core.debug.debugging import log
+from core.utils.listener import Listener
 
 
 class Peer:
@@ -27,10 +23,12 @@ class Peer:
         self.conn = conn
         self.addr = addr
 
+        self.listener = Listener(["connected", "message_received", "message_sent"])
+
         self.peer_state = PeerState(user_manager, my_sign)
         self.peer_crypto = PeerCrypto(self.peer_state, get_trusted_token)
-        self.peer_connection = PeerConnection(self.disconnect, self.peer_crypto, self.conn)
-        self.peer_events = PeerEvents(self.disconnect)
+        self.peer_events = PeerEvents(self.disconnect, self.listener, self.peer_state)
+        self.peer_connection = PeerConnection(self.disconnect, self.peer_crypto, self.conn, self.peer_events)
 
         self._disconnected = False
         log("new peer created with random debug number of: " + str(random.randrange(1000, 9999)))
@@ -83,7 +81,7 @@ class Peer:
         while running and not self._disconnected:
             event = self.peer_connection.receive()
             log(event)
-            self.peer_events.on_event_received(self.addr, event)
+            self.peer_events.on_event_received(event)
 
         self.disconnect("listen_for_events: no longer running")
 
