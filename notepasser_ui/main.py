@@ -5,7 +5,7 @@ import time
 from PySide6.QtWidgets import QApplication
 
 from core.node import Node
-from ui.chat import ChatWindow
+from notepasser_ui.chat import ChatWindow
 
 
 class GuiNode(Node):
@@ -61,4 +61,9 @@ class GuiNode(Node):
         if not self.cur_peer: return
         self.cur_peer.disconnect()
 
-GuiNode(input)
+
+def main():
+    GuiNode(input)
+
+if __name__ == '__main__':
+    main()

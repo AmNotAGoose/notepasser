@@ -1,4 +1,4 @@
-VERSION = "0.0.3"
+VERSION = "0.0.15"
 BROADCAST_PORT = 33311
 running = True
 debug = False

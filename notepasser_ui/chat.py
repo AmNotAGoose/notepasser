@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QListView, QW
 
 import core.globals
 from core.debug.debugging import log
-from ui.utils import loadUiWidget
+from notepasser_ui.utils import loadUiWidget
 
 
 class ChatWindow(QWidget):
